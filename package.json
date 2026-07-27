@@ -1,0 +1,22 @@
+{
+  "name": "skills",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">",
+  "main": "index.js",
+  "scripts": {
+    "ship": "npx tsx scripts/ship.ts",
+    "unship": "npx tsx scripts/unship.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mortalYoung/skills.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mortalYoung/skills/issues"
+  },
+  "homepage": "https://github.com/mortalYoung/skills#readme"
+}
