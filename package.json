@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/mortalYoung/skills/issues"
   },
-  "homepage": "https://github.com/mortalYoung/skills#readme"
+  "homepage": "https://github.com/mortalYoung/skills#readme",
+  "dependencies": {
+    "@octokit/rest": "^22.0.1"
+  }
 }
