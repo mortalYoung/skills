@@ -1,7 +1,7 @@
 {
   "name": "skills",
   "version": "1.0.0",
-  "description": "<div align=\"center\">",
+  "description": "Ship perfect skill to fit my work.",
   "scripts": {
     "ship": "npx tsx scripts/ship.ts",
     "unship": "npx tsx scripts/unship.ts"
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/mortalYoung/skills.git"
   },
-  "keywords": [],
+  "keywords": ["skill"],
   "author": "",
   "license": "ISC",
   "type": "module",
