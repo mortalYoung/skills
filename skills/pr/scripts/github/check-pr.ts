@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 /**
  * Check if an open PR exists for the current branch using Octokit.
  * Returns PR number and metadata if found, exits with 1 if not.

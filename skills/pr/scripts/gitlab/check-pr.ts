@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 /**
  * Check if an open MR exists for the current branch using @gitbeaker/rest.
  * Returns MR IID and metadata if found, exits with 1 if not.

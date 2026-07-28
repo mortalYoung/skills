@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 /**
  * Create a new GitHub PR for the current branch using Octokit.
  * Args: --title "<title>" --body "<body>" [--draft]

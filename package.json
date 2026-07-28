@@ -2,7 +2,6 @@
   "name": "skills",
   "version": "1.0.0",
   "description": "<div align=\"center\">",
-  "main": "index.js",
   "scripts": {
     "ship": "npx tsx scripts/ship.ts",
     "unship": "npx tsx scripts/unship.ts"
@@ -14,7 +13,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/mortalYoung/skills/issues"
   },

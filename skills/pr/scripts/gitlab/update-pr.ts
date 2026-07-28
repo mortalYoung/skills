@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 /**
  * Update an existing GitLab MR using @gitbeaker/rest.
  * Args: --pr <iid> --title "<title>" --body "<body>"

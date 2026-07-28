@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 /**
  * Update an existing GitHub PR using Octokit.
  * Args: --pr <number> --title "<title>" --body "<body>"

@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 /**
  * Create a new GitLab MR for the current branch using @gitbeaker/rest.
  * Args: --title "<title>" --body "<body>" [--draft]

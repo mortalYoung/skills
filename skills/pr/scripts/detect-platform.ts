@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 /**
  * Detect Git platform from remote URL.
  * Returns: "github" | "gitlab" | null
