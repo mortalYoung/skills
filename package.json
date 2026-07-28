@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/mortalYoung/skills#readme",
   "dependencies": {
-    "@octokit/rest": "^22.0.1"
+    "@gitbeaker/rest": "^43.8.0",
+    "@octokit/rest": "^22.0.1",
+    "dotenv": "^17.4.2"
   }
 }

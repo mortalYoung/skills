@@ -3,8 +3,12 @@
  * Args: --pr <number> --title "<title>" --body "<body>"
  */
 
+import dotenv from "dotenv";
+import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { Octokit } from "@octokit/rest";
+
+dotenv.config({ path: resolve(import.meta.dirname!, "../../.env") });
 
 const args = process.argv.slice(2);
 const prNumber = Number(extractArg(args, "--pr"));

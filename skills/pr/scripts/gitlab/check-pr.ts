@@ -3,8 +3,13 @@
  * Returns MR IID and metadata if found, exits with 1 if not.
  */
 
+import dotenv from "dotenv";
+import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { Gitlab } from "@gitbeaker/rest";
+import { getGitLabHost, getProjectPath } from "./gitlab-utils.ts";
+
+dotenv.config({ path: resolve(import.meta.dirname!, "../../.env") });
 
 function getCurrentBranch(): string {
   return execSync("git rev-parse --abbrev-ref HEAD", {
@@ -12,27 +17,14 @@ function getCurrentBranch(): string {
   }).trim();
 }
 
-function getProjectPath(): string | null {
-  try {
-    const remote = execSync("git remote get-url origin", {
-      encoding: "utf-8",
-    }).trim();
-    const match = remote.match(
-      /(?:gitlab\.com[/:]|gitlab\.[a-z.-]+[/:])([\w.-]+\/[\w.-]+?)(?:\.git)?$/
-    );
-    return match ? match[1] : null;
-  } catch {
-    return null;
-  }
-}
-
 async function checkExistingMR(): Promise<void> {
   const branch = getCurrentBranch();
+  const host = getGitLabHost();
   const projectPath = getProjectPath();
   const token = process.env.GITLAB_TOKEN;
 
-  if (!projectPath) {
-    console.error("Could not determine GitLab project path from remote URL");
+  if (!host || !projectPath) {
+    console.error("Could not determine GitLab host or project path from remote URL");
     process.exit(1);
   }
 
@@ -41,7 +33,7 @@ async function checkExistingMR(): Promise<void> {
     process.exit(1);
   }
 
-  const api = new Gitlab({ token });
+  const api = new Gitlab({ token, host });
 
   try {
     const mrs = await api.MergeRequests.all({

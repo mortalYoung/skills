@@ -3,8 +3,13 @@
  * Args: --pr <iid> --title "<title>" --body "<body>"
  */
 
+import dotenv from "dotenv";
+import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { Gitlab } from "@gitbeaker/rest";
+import { getGitLabHost, getProjectPath } from "./gitlab-utils.ts";
+
+dotenv.config({ path: resolve(import.meta.dirname!, "../../.env") });
 
 const args = process.argv.slice(2);
 const mrIid = Number(extractArg(args, "--pr"));
@@ -17,30 +22,17 @@ function extractArg(args: string[], flag: string): string | null {
   return args[idx + 1];
 }
 
-function getProjectPath(): string | null {
-  try {
-    const remote = execSync("git remote get-url origin", {
-      encoding: "utf-8",
-    }).trim();
-    const match = remote.match(
-      /(?:gitlab\.com[/:]|gitlab\.[a-z.-]+[/:])([\w.-]+\/[\w.-]+?)(?:\.git)?$/
-    );
-    return match ? match[1] : null;
-  } catch {
-    return null;
-  }
-}
-
 if (!mrIid) {
   console.error("--pr is required (numeric IID)");
   process.exit(1);
 }
 
+const host = getGitLabHost();
 const projectPath = getProjectPath();
 const token = process.env.GITLAB_TOKEN;
 
-if (!projectPath) {
-  console.error("Could not determine GitLab project path from remote URL");
+if (!host || !projectPath) {
+  console.error("Could not determine GitLab host or project path from remote URL");
   process.exit(1);
 }
 
@@ -49,7 +41,7 @@ if (!token) {
   process.exit(1);
 }
 
-const api = new Gitlab({ token });
+const api = new Gitlab({ token, host });
 
 try {
   const updates: Record<string, string> = {};

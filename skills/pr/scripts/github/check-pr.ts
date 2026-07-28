@@ -3,8 +3,12 @@
  * Returns PR number and metadata if found, exits with 1 if not.
  */
 
+import dotenv from "dotenv";
+import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { Octokit } from "@octokit/rest";
+
+dotenv.config({ path: resolve(import.meta.dirname!, "../../.env") });
 
 function getCurrentBranch(): string {
   return execSync("git rev-parse --abbrev-ref HEAD", {

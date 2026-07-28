@@ -3,12 +3,18 @@
  * Args: --title "<title>" --body "<body>" [--draft]
  */
 
+import dotenv from "dotenv";
+import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { Gitlab } from "@gitbeaker/rest";
+import { getGitLabHost, getProjectPath } from "./gitlab-utils.ts";
+
+dotenv.config({ path: resolve(import.meta.dirname!, "../../.env") });
 
 const args = process.argv.slice(2);
 const title = extractArg(args, "--title");
 const body = extractArg(args, "--body");
+const targetBranchArg = extractArg(args, "--target-branch");
 const draft = args.includes("--draft");
 
 function extractArg(args: string[], flag: string): string | null {
@@ -19,18 +25,6 @@ function extractArg(args: string[], flag: string): string | null {
 
 function getCurrentBranch(): string {
   return execSync("git rev-parse --abbrev-ref HEAD", { encoding: "utf-8" }).trim();
-}
-
-function getProjectPath(): string | null {
-  try {
-    const remote = execSync("git remote get-url origin", { encoding: "utf-8" }).trim();
-    const match = remote.match(
-      /(?:gitlab\.com[/:]|gitlab\.[a-z.-]+[/:])([\w.-]+\/[\w.-]+?)(?:\.git)?$/
-    );
-    return match ? match[1] : null;
-  } catch {
-    return null;
-  }
 }
 
 function getDefaultBranch(): string {
@@ -48,13 +42,14 @@ if (!title) {
   process.exit(1);
 }
 
+const host = getGitLabHost();
 const projectPath = getProjectPath();
 const token = process.env.GITLAB_TOKEN;
 const sourceBranch = getCurrentBranch();
-const targetBranch = getDefaultBranch();
+const targetBranch = targetBranchArg ?? getDefaultBranch();
 
-if (!projectPath) {
-  console.error("Could not determine GitLab project path from remote URL");
+if (!host || !projectPath) {
+  console.error("Could not determine GitLab host or project path from remote URL");
   process.exit(1);
 }
 
@@ -63,14 +58,16 @@ if (!token) {
   process.exit(1);
 }
 
-const api = new Gitlab({ token });
+const api = new Gitlab({ token, host });
 
 try {
-  const mr = await api.MergeRequests.create(projectPath, sourceBranch, targetBranch, {
+  const mr = await api.MergeRequests.create(
+    projectPath,
+    sourceBranch,
+    targetBranch,
     title,
-    description: body || undefined,
-    removeSourceBranch: true,
-  });
+    { description: body || undefined, removeSourceBranch: true },
+  );
   console.log(`MR created: ${mr.web_url}`);
 } catch (err: any) {
   console.error(`Failed to create MR: ${err.message}`);

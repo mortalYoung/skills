@@ -82,3 +82,12 @@ Then:
 - Does not merge PRs
 - Does not approve PRs
 - Does not delete branches
+- Do NOT use `glab` CLI for MR operations — always use scripts for create/check/update
+
+## Troubleshooting
+
+| Error | Fix |
+|---|---|
+| `Cannot find package 'xxx'` | Run `bun i` at the project root to install dependencies |
+| `GITLAB_TOKEN not set` | Create `skills/pr/.env` with `GITLAB_TOKEN=glpat-xxx` |
+| `title is invalid` | Ensure `--title` value is a plain text string (not a JSON object) |
