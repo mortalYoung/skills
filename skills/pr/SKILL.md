@@ -15,7 +15,6 @@ Push commits and create or update PRs.
 - `Node.js >= 22.6.0` — built-in TypeScript execution via `node --experimental-strip-types`
 - `@octokit/rest` — for GitHub PR operations
 - `@gitbeaker/rest` — for GitLab MR operations
-- `GITHUB_TOKEN` / `GH_TOKEN` and `GITLAB_TOKEN` — see README.md for setup
 
 ## Action
 
@@ -23,18 +22,11 @@ All scripts run with `node --experimental-strip-types scripts/<path>` from the p
 
 ### 1. Detect platform
 
-```
+```bash
 node --experimental-strip-types scripts/detect-platform.ts
 ```
 
-Output: `github` or `gitlab`. Sets `$PLATFORM` for subsequent steps.
-
-Parses `git remote get-url origin`:
-
-| URL pattern | Platform |
-|---|---|
-| `github.com/...` | `github` |
-| `gitlab.com/...` or `gitlab.` custom domain | `gitlab` |
+Output: `github` or `gitlab`.
 
 ### 2. Push current branch (if needed)
 
@@ -49,16 +41,15 @@ Skip push when:
 - User says "without pushing"
 
 Push commands:
-```
+```bash
 git push                          # branch has remote tracking
-git push -u origin <branch>       # branch is new (but skip new branches per rule above)
 ```
 
 ### 3. Create new PR or update existing PR
 
 First, check for an existing open PR for the current branch:
 
-```
+```bash
 node --experimental-strip-types scripts/<platform>/check-pr.ts
 ```
 
@@ -67,15 +58,33 @@ Output: `{"found": true, "number": 42, "title": "...", "body": "..."}` or `{"fou
 Then:
 
 - **No existing PR found** → create:
-  ```
-  node --experimental-strip-types scripts/<platform>/create-pr.ts --title "feat: ..." --body "Closes #..."
-  node --experimental-strip-types scripts/<platform>/create-pr.ts --title "feat: ..." --body "Closes #..." --draft
-  ```
+```bash
+node --experimental-strip-types scripts/<platform>/create-pr.ts --title "feat: ..." --body "Closes #..."
+node --experimental-strip-types scripts/<platform>/create-pr.ts --title "feat: ..." --body "Closes #..." --draft
+```
 
 - **Existing open PR found** → update:
-  ```
-  node --experimental-strip-types scripts/<platform>/update-pr.ts --pr 42 --title "feat: ..." --body "Closes #..."
-  ```
+```bash
+node --experimental-strip-types scripts/<platform>/update-pr.ts --pr 42 --title "feat: ..." --body "Closes #..."
+```
+
+### 4. PR body template
+
+When generating the `--body` content, use the following structure:
+
+```markdown
+## Summary
+
+<What does this PR do and why?>
+
+## Changes
+
+- <Change one>
+- <Change two>
+- ...
+```
+
+At minimum, always include **Summary** and **Changes** sections. Add optional sections (Breaking Changes, Screenshots, etc.) when relevant.
 
 ## Boundaries
 
@@ -88,6 +97,6 @@ Then:
 
 | Error | Fix |
 |---|---|
-| `Cannot find package 'xxx'` | Run `bun i` at the project root to install dependencies |
+| `Cannot find package 'xxx'` | Run `bun i` at the skill root to install dependencies |
 | `GITLAB_TOKEN not set` | Create `skills/pr/.env` with `GITLAB_TOKEN=glpat-xxx` |
 | `title is invalid` | Ensure `--title` value is a plain text string (not a JSON object) |
