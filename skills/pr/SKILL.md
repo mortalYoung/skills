@@ -100,3 +100,4 @@ At minimum, always include **Summary** and **Changes** sections. Add optional se
 | `Cannot find package 'xxx'` | Run `bun i` at the skill root to install dependencies |
 | `GITLAB_TOKEN not set` | Create `skills/pr/.env` with `GITLAB_TOKEN=glpat-xxx` |
 | `title is invalid` | Ensure `--title` value is a plain text string (not a JSON object) |
+| `detect-platform` 输出 `github` 或 MR 创建失败返回 GitHub HTML 错误页（404 "Oh no") | 脚本必须在**项目仓库根目录**运行。脚本里的 `git remote get-url origin` / `git rev-parse` 从 cwd 向上解析 git 仓库——在 skill 目录（如 `~/.claude/skills/pr`）跑会解析到错误仓库（如 `.claude` dotfiles 仓库，origin 指向 GitHub），导致 host 误判、GitLab API 打到 GitHub。用绝对路径调脚本：`node --experimental-strip-types ~/.claude/skills/pr/scripts/gitlab/create-pr.ts ...` |
