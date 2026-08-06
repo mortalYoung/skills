@@ -75,16 +75,20 @@ When generating the `--body` content, use the following structure:
 ```markdown
 ## Summary
 
-<What does this PR do and why?>
+<From a business perspective: what problem does this PR solve, or what new capability does it enable?>
 
 ## Changes
 
-- <Change one>
-- <Change two>
+- <Functional result of the modified files, framed by the business goal>
 - ...
 ```
 
 At minimum, always include **Summary** and **Changes** sections. Add optional sections (Breaking Changes, Screenshots, etc.) when relevant.
+
+Writing guidelines:
+
+- **Summary**: View the PR from the business angle — describe the problem it solves or the new capability it provides to the business/user, not an implementation recap.
+- **Changes**: Do NOT list per-file diffs (e.g. "added function `foo` in `bar.ts`"). Instead, tie the file modifications together as functional steps that solve the business problem or support the requirement — e.g. "added a helper function to resolve X", framed by what problem it solves, not what code was added.
 
 ## Boundaries
 
